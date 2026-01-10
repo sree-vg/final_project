@@ -19,6 +19,12 @@ The project follows a complete **end-to-end data science workflow**, from data c
 * Direct Marketing / Telemarketing Campaign Analytics
 
 ---
+## 🌐 Live Demo (Streamlit App)
+
+👉 **Try the live application here:**  
+🔗 https://finalproject-zfgvcxhf5b2lcawvtsjv87.streamlit.app
+
+> The app predicts whether a bank client is likely to subscribe to a term deposit **before a marketing call is made**, ensuring no data leakage.
 
 ## 🧩 Problem Statement
 
