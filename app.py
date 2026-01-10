@@ -28,7 +28,7 @@ st.info(
 # ----------------------------------
 @st.cache_resource
 def load_model():
-    return joblib.load("models/term_deposit_model.pkl")
+    return joblib.load("term_deposit_model.pkl")
 
 model = load_model()
 
@@ -192,3 +192,4 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
