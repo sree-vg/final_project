@@ -1,0 +1,9 @@
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+.env
+.DS_Store
+#models/
+
+# Ignore model & big data if you want (optional)
+# data/
