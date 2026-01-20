@@ -74,7 +74,7 @@ Extend the model for cross-selling and upselling strategies.
 ## 📂 Dataset
 
 **Dataset Name:** Bank Marketing Dataset (Portugal)
-**File Used:** `bank-additional-full.csv`
+**File Used:** `bank.csv`
 
 ### 🔢 Input Features
 
@@ -168,12 +168,18 @@ flowchart TD
 ## 📊 Model Performance
 
 * **Model:** Random Forest Classifier
-* **Accuracy:** ~90%
-* **F1-score:** ~0.79
+* **Accuracy:** ~90% (test set)
+* **F1-score:** ~0.79 (subscriber class)
 * **Focus:** Minority class (Subscribers)
 
 ---
+## 🎯 Model Limitations & Assumptions
 
+- Predictions are probabilistic, not deterministic
+- Customer behavior may change over time (concept drift)
+- Model performance depends on historical campaign patterns
+- Economic thresholds are user-defined and context-dependent
+  
 ## ⚖️ Why F1-Score Was Prioritized
 
 The dataset is highly imbalanced.
@@ -195,12 +201,118 @@ Accuracy alone can be misleading as it favors the majority class.
 
 ```mermaid
 flowchart LR
-    U[User Inputs - Client Details] --> S[Streamlit UI]
-    S --> P[Preprocessing Pipeline]
-    P --> M[Random Forest Model]
-    M --> O[Prediction and Probability]
-    O --> D[Business Decision Support]
+    U["User Inputs - Client Profile"] --> S["Streamlit UI"]
+    S --> P["Preprocessing Pipeline - Encoding and Scaling"]
+    P --> M["Random Forest Model"]
+    M --> O["Subscription Probability - Example 55 or 46"]
+    O --> E["Economic Evaluation - Expected Profit and Break-even"]
+    E --> D["Decision Engine - CALL or DO NOT CALL"]
+    D --> B["Business Decision Support - Campaign Optimization"]
 ```
+
+## 🧠 Prediction Interpretation & Business Decision Logic
+
+The Streamlit application provides a **probability-based prediction**, not a binary guarantee.  
+This reflects real-world customer behavior and supports **risk-aware decision-making**.
+
+---
+
+### 🔢 Why the Prediction Is 55% or 46% (and Not 100%)
+
+The model outputs a **probability of subscription**, not certainty, because:
+
+1. **Customer behavior is uncertain**
+   - Even highly suitable customers may choose not to subscribe.
+
+2. **Random Forest is a probabilistic ensemble model**
+   - Each decision tree votes “Yes” or “No”
+   - Final probability = proportion of trees predicting “Yes”
+   - Example:
+     - 55 out of 100 trees → **55% probability**
+     - 46 out of 100 trees → **46% probability**
+
+3. **Similar customer profiles had mixed outcomes**
+   - In historical data, customers with similar attributes sometimes subscribed and sometimes did not.
+
+> A 100% prediction would indicate **overfitting or data leakage**, which is avoided in this project.
+
+---
+
+### 💰 Cost–Benefit Analysis (Economic Layer)
+
+The prediction model is intentionally **separated from business economics**.
+
+#### User-defined inputs:
+- **Cost per marketing call**: €5
+- **Revenue per successful subscription**: €500
+
+---
+
+### 📉 Break-even Probability
+
+The minimum probability required to avoid loss:
+
+Break-even Probability = Call Cost / Revenue  
+= 5 / 500  
+= 1%
+
+- Below **1%** → Expected loss
+- Above **1%** → Expected profit
+
+---
+
+### 📈 Expected Profit Formula
+
+Expected Profit = (Predicted Probability × Revenue) − Call Cost
+
+**Example (46% probability):**
+
+0.46 × 500 − 5 = €225
+
+---
+
+### 📊 ROI vs Probability Visualization
+
+The ROI graph in the UI visualizes:
+
+- **X-axis** → Subscription probability
+- **Y-axis** → Expected profit
+
+This follows **expected value theory** from economics:
+
+Profit(p) = 500p − 5
+
+The graph:
+- Is linear
+- Intersects the x-axis at the break-even point (1%)
+- Helps decision-makers understand risk–return tradeoffs
+
+---
+
+### ✅ Final Decision Rule (CALL / DO NOT CALL)
+
+A call is recommended **only if all conditions are met**:
+
+1. **Predicted Probability ≥ Risk Threshold (50%)**
+2. **Expected Profit ≥ Minimum Profit (€50)**
+3. **Above Break-even Probability**
+
+| Probability | Expected Profit | Decision |
+|------------|----------------|----------|
+| 55% | High | ✅ CALL |
+| 46% | Positive but risky | ❌ DO NOT CALL |
+
+> This mirrors real banking practices, where not all profitable opportunities are pursued due to risk constraints.
+
+---
+
+### 🏦 Business Value
+
+This approach ensures:
+- Reduced telemarketing costs
+- Risk-aware targeting
+- Better customer experience
+- Economically optimal campaign decisions
 
 ---
 
@@ -234,9 +346,13 @@ Data Science & Analytics Enthusiast
 
 ## 🏁 Final Summary
 
-This project demonstrates a **production-ready machine learning solution** for banking marketing optimization.
-It combines **robust preprocessing, insightful EDA, imbalance-aware modeling, and an interactive Streamlit interface** to support smarter and cost-effective decision-making.
+This project delivers a production-ready machine learning decision-support system for optimizing bank telemarketing campaigns. It predicts term deposit subscription probability before a marketing call, ensuring no data leakage and realistic deployment. Rather than relying on binary predictions, the model provides probability-based outputs that reflect real customer behavior. These probabilities are translated into expected profit and break-even analysis, enabling risk-aware CALL / DO NOT CALL decisions grounded in economic reasoning. Deployed as an interactive Streamlit application, the solution bridges machine learning and business strategy, demonstrating how data science can drive cost-efficient, value-focused marketing decisions in the banking domain.
 
 **Data-driven decisions for smarter banking. 🚀**
 
 ---
+## 🔮 Future Scope & Enhancements
+* Dynamic risk thresholds based on campaign budgets
+* Customer Lifetime Value (CLV) integration
+* Explainable AI (SHAP) for regulatory transparency
+* Model monitoring and retraining for concept drift
